@@ -36,7 +36,6 @@ int main(int argc, char *argv[])
 
 	glViewport(0, 0, 640, 360); // Half of 720p
 
-	Matrix modelMatrix;
 	Matrix modelMatrixLeft;
 	Matrix modelMatrixRight;
 	Matrix modelMatrixBall;
@@ -44,18 +43,20 @@ int main(int argc, char *argv[])
 	Matrix projectionMatrix;
 	projectionMatrix.setOrthoProjection(-1.777f, 1.777f, -1.0f, 1.0f, -1.0f, 1.0f);
 
+	// paddle vars
 	float lastFrameTicks = 0.0f;
 	float paddleHeight = 0.4f;
 	float paddleWidth = 0.05f;
 	float paddleLeftY = 0.0f;
 	float paddleRightY = 0.0f;
 
+	// ball vars
 	float ballLength = 0.05f;
 	float ballPosX = 0.0f;
 	float ballPosY = 0.0f;
 	float ballDirX = 0.0f;
 	float ballDirY = 0.0f;
-	float ballSpeed = 0.66f;
+	float ballSpeed = 2.0f;
 
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
 	SDL_Event event;
@@ -68,10 +69,8 @@ int main(int argc, char *argv[])
 		}
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		program.setModelMatrix(modelMatrix);
 		program.setViewMatrix(viewMatrix);
 		program.setProjectionMatrix(projectionMatrix);
-
 		glUseProgram(program.programID);
 		
 		float ticks = (float)SDL_GetTicks() / 1000.0f;
@@ -81,12 +80,8 @@ int main(int argc, char *argv[])
 		// Left Paddle Begin
 		program.setModelMatrix(modelMatrixLeft);
 
-		if (keys[SDL_SCANCODE_W]) { // move paddle up
-			if (paddleLeftY < 0.8f) paddleLeftY += elapsed;
-		}
-		else if (keys[SDL_SCANCODE_S]){ // move paddle down
-			if (paddleLeftY > -0.8f) paddleLeftY -= elapsed;
-		}
+		if (keys[SDL_SCANCODE_W] && paddleLeftY < 0.8f) { paddleLeftY += elapsed; } // move paddle up
+		else if (keys[SDL_SCANCODE_S] && paddleLeftY > -0.8f){ paddleLeftY -= elapsed; } // move paddle down
 
 		float vertices[] = { -paddleWidth / 2, -paddleHeight / 2, -paddleWidth / 2, paddleHeight / 2, paddleWidth / 2, paddleHeight / 2,
 			-paddleWidth / 2, -paddleHeight / 2, paddleWidth / 2, -paddleHeight / 2, paddleWidth / 2, paddleHeight / 2 };
@@ -102,12 +97,8 @@ int main(int argc, char *argv[])
 		// Right Paddle Begin
 		program.setModelMatrix(modelMatrixRight);
 		
-		if (keys[SDL_SCANCODE_UP]) {// move paddle up
-			if (paddleRightY < 0.8f) paddleRightY += elapsed;
-		}
-		else if (keys[SDL_SCANCODE_DOWN]){ // move paddle down
-			if (paddleRightY > -0.8f) paddleRightY -= elapsed;
-		}
+		if (keys[SDL_SCANCODE_UP] && paddleRightY < 0.8f) { paddleRightY += elapsed; } // move paddle up
+		else if (keys[SDL_SCANCODE_DOWN] && paddleRightY > -0.8f){ paddleRightY -= elapsed; } // move paddle down
 
 		float vertices2[] = { -paddleWidth / 2, -paddleHeight / 2, -paddleWidth / 2, paddleHeight / 2, paddleWidth / 2, paddleHeight / 2,
 			-paddleWidth / 2, -paddleHeight / 2, paddleWidth / 2, -paddleHeight / 2, paddleWidth / 2, paddleHeight / 2 };
