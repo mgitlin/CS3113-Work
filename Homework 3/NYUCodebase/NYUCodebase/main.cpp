@@ -197,9 +197,9 @@ int main(int argc, char *argv[])
 		case GAME_OVER:
 			program->setModelMatrix(modelMatrixOver);
 			//DrawBackground(program, backgroundTexture);
-			DrawText(program, fontSheet, "Thanks for playing!\nPress the return key to go back to the main menu!", 0.075f, 0.0005f);
+			DrawText(program, fontSheet, "Thanks for playing!\nPress the return key to quit!", 0.075f, 0.0005f);
 			if (keys[SDL_SCANCODE_RETURN]) {
-				state = MAIN_MENU;
+				done = true;
 			}
 			break;
 		}
