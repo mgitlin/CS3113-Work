@@ -179,8 +179,10 @@ int main(int argc, char *argv[])
 		{
 		case MAIN_MENU:
 			program->setModelMatrix(modelMatrixMain);
+			modelMatrixMain.identity();
+			modelMatrixMain.Translate(-0.9f, 0.0f, 0.0f);
 			//DrawBackground(program, backgroundTexture);
-			DrawText(program, fontSheet, "Welcome!\nPress the return key to start the game!", 0.075f, 0.0005f);
+			DrawText(program, fontSheet, "Press enter to start!", 0.075f, 0.0005f);
 			if (keys[SDL_SCANCODE_RETURN]) { // Press enter to get into game level
 				state = GAME_LEVEL;
 			}	
@@ -196,8 +198,10 @@ int main(int argc, char *argv[])
 			break;
 		case GAME_OVER:
 			program->setModelMatrix(modelMatrixOver);
+			modelMatrixOver.identity();
+			modelMatrixOver.Translate(-0.9f, 0.0f, 0.0f);
 			//DrawBackground(program, backgroundTexture);
-			DrawText(program, fontSheet, "Thanks for playing!\nPress the return key to quit!", 0.075f, 0.0005f);
+			DrawText(program, fontSheet, "Thanks for playing!\nPress enter to quit!", 0.075f, 0.0005f);
 			if (keys[SDL_SCANCODE_RETURN]) {
 				done = true;
 			}
