@@ -5,8 +5,8 @@ Paddle::Paddle(float x, float height, float width, float speed, SDL_Scancode upK
 	: keys(SDL_GetKeyboardState(NULL)), x(x), y(0.0f), height(height), width(width), speed(speed), upKey(upKey), downKey(downKey) {}
 
 void Paddle::Update(float elapsed){
-	if (keys[upKey] && y < 0.8f) { y += elapsed; } // move paddle up
-	else if (keys[downKey] && y > -0.8f){ y -= elapsed; } // move paddle down
+	if (keys[upKey] && y < 0.8f) { y += elapsed * speed; } // move paddle up
+	else if (keys[downKey] && y > -0.8f){ y -= elapsed * speed; } // move paddle down
 }
 
 void Paddle::Render(ShaderProgram* program){

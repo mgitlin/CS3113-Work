@@ -16,6 +16,11 @@
 #include "Paddle.h"
 #include "Ball.h"
 
+// 60 FPS (1.0f/60.0f)
+#define FIXED_TIMESTEP 0.01666667f
+#define MAX_TIMESTEPS 6
+float timeLeftOver = 0.0f;
+
 SDL_Window* displayWindow;
 
 int main(int argc, char *argv[])
@@ -40,9 +45,9 @@ int main(int argc, char *argv[])
 	float lastFrameTicks = 0.0f;
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
-	Paddle leftPaddle(-1.652f, 0.4f, 0.05f, 1.0f, SDL_SCANCODE_W, SDL_SCANCODE_S);
-	Paddle rightPaddle(1.652f, 0.4f, 0.05f, 1.0f, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
-	Ball ball(0.05f, 1.5f);
+	Paddle leftPaddle(-1.652f, 0.4f, 0.05f, 0.05f, SDL_SCANCODE_W, SDL_SCANCODE_S);
+	Paddle rightPaddle(1.652f, 0.4f, 0.05f, 0.05f, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
+	Ball ball(0.05f, 0.05f);
 
 	SDL_Event event;
 	bool done = false;
@@ -62,19 +67,27 @@ int main(int argc, char *argv[])
 		float ticks = (float)SDL_GetTicks() / 1000.0f;
 		float elapsed = ticks - lastFrameTicks;
 		lastFrameTicks = ticks;
+		float fixedElapsed = elapsed + timeLeftOver;
+		if (fixedElapsed > FIXED_TIMESTEP * MAX_TIMESTEPS) {
+			fixedElapsed = FIXED_TIMESTEP * MAX_TIMESTEPS;
+		}
+		while (fixedElapsed >= FIXED_TIMESTEP) {
+			fixedElapsed -= FIXED_TIMESTEP;
+		}
+		timeLeftOver = fixedElapsed;
 
 		// Left Paddle Begin
-		leftPaddle.Update(elapsed);
+		leftPaddle.Update(fixedElapsed);
 		leftPaddle.Render(program);
 		// Left Paddle End
 
 		// Right Paddle Begin
-		rightPaddle.Update(elapsed);
+		rightPaddle.Update(fixedElapsed);
 		rightPaddle.Render(program);
 		// Right Paddle End
 
 		// Ball Begin
-		ball.Update(elapsed, leftPaddle, rightPaddle);
+		ball.Update(fixedElapsed, leftPaddle, rightPaddle);
 		ball.Render(program);
 		// Ball End
 
