@@ -20,14 +20,13 @@
 // 60 FPS (1.0f/60.0f)
 #define FIXED_TIMESTEP 0.01666667f
 #define MAX_TIMESTEPS 6
-float timeLeftOver = 0.0f;
 
 SDL_Window* displayWindow;
 
 int main(int argc, char *argv[])
 {
 	SDL_Init(SDL_INIT_VIDEO);
-	displayWindow = SDL_CreateWindow("My Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 360, SDL_WINDOW_OPENGL);
+	displayWindow = SDL_CreateWindow("Pong!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 360, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
 	SDL_GL_MakeCurrent(displayWindow, context);
 	#ifdef _WINDOWS
@@ -46,6 +45,7 @@ int main(int argc, char *argv[])
 	projectionMatrix.setOrthoProjection(-1.777f, 1.777f, -1.0f, 1.0f, -1.0f, 1.0f);
 
 	float lastFrameTicks = 0.0f;
+	float timeLeftOver = 0.0f;
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
 	Mix_Music *music;
@@ -91,20 +91,13 @@ int main(int argc, char *argv[])
 		}
 		timeLeftOver = fixedElapsed;
 
-		// Left Paddle Begin
 		leftPaddle.Update(fixedElapsed);
-		leftPaddle.Render(program);
-		// Left Paddle End
-
-		// Right Paddle Begin
 		rightPaddle.Update(fixedElapsed);
-		rightPaddle.Render(program);
-		// Right Paddle End
-
-		// Ball Begin
 		ball.Update(fixedElapsed, leftPaddle, rightPaddle);
+
+		leftPaddle.Render(program);
+		rightPaddle.Render(program);
 		ball.Render(program);
-		// Ball End
 
 		SDL_GL_SwapWindow(displayWindow);
 	}
