@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 
 #ifdef _WINDOWS
 	#define RESOURCE_FOLDER ""
@@ -37,6 +38,8 @@ int main(int argc, char *argv[])
 
 	glViewport(0, 0, 640, 360); // Half of 720p
 
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+
 	Matrix modelMatrix;
 	Matrix viewMatrix;
 	Matrix projectionMatrix;
@@ -45,15 +48,27 @@ int main(int argc, char *argv[])
 	float lastFrameTicks = 0.0f;
 	const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
+	Mix_Music *music;
+	music = Mix_LoadMUS("gba1complete.mp3");
+
 	Paddle leftPaddle(-1.652f, 0.4f, 0.05f, 0.05f, SDL_SCANCODE_W, SDL_SCANCODE_S);
 	Paddle rightPaddle(1.652f, 0.4f, 0.05f, 0.05f, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN);
-	Ball ball(0.05f, 0.05f);
+	Mix_Chunk* ballHit;
+	Mix_Chunk* ballDie;
+	ballHit = Mix_LoadWAV("hit.wav");
+	ballDie = Mix_LoadWAV("die.wav");
+	Ball ball(0.05f, 0.05f, ballHit, ballDie);
+
+	Mix_PlayMusic(music, -1);
 
 	SDL_Event event;
 	bool done = false;
 	while (!done) {
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
+				Mix_FreeChunk(ballHit);
+				Mix_FreeChunk(ballDie);
+				Mix_FreeMusic(music);
 				done = true;
 			}
 		}

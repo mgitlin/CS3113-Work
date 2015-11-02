@@ -66,5 +66,8 @@
     <Media Include="die.wav">
       <Filter>Resource Files</Filter>
     </Media>
+    <Media Include="gba1complete.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

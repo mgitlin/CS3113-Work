@@ -1,7 +1,8 @@
 #include "Ball.h"
 
 Ball::Ball(){}
-Ball::Ball(float size, float speed) : keys(SDL_GetKeyboardState(NULL)), size(size), speed(speed), x(0.0f), y(0.0f), dir_x(0.0f), dir_y(0.0f) {}
+Ball::Ball(float size, float speed, Mix_Chunk* hitSound, Mix_Chunk* dieSound) 
+	: keys(SDL_GetKeyboardState(NULL)), size(size), speed(speed), x(0.0f), y(0.0f), dir_x(0.0f), dir_y(0.0f), hitSound(hitSound), dieSound(dieSound) {}
 
 void Ball::Update(float elapsed, Paddle& left, Paddle& right) {
 	if (keys[SDL_SCANCODE_SPACE] && dir_x == 0 && dir_y == 0) { dir_x = randDir(); dir_y = randDir(); } // start the ball by hitting the space bar
@@ -15,19 +16,19 @@ void Ball::Update(float elapsed, Paddle& left, Paddle& right) {
 	if (-1.652f + left.width / 2 >= x - size / 2 &&
 		left.y - left.height / 2 <= y - size / 2 &&
 		left.y + left.height / 2 >= y + size / 2) {
-		// play sound
+		Mix_PlayChannel(-1, hitSound, 0);
 		dir_x = 1.0f;
 	} // ball hitting left paddle
 
 	if (1.652f - right.width / 2 <= x + size / 2 &&
 		right.y - right.height / 2 <= y - size / 2 &&
 		right.y + right.height / 2 >= y + size / 2) {
-		// play sound
+		Mix_PlayChannel(-1, hitSound, 0);
 		dir_x = -1.0f;
 	} // ball hitting right paddle
 
 	if (x >= 1.752f || x <= -1.752) {
-		// play sound
+		Mix_PlayChannel(-1, dieSound, 0);
 		x = 0.0f; y = 0.0f; dir_x = 0.0f; dir_y = 0.0f;
 		left.y = 0.0f;  right.y = 0.0f;
 	} // reset if somebody loses

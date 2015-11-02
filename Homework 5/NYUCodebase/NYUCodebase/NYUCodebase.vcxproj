@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="die.wav" />
+    <Media Include="gba1complete.mp3" />
     <Media Include="hit.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
