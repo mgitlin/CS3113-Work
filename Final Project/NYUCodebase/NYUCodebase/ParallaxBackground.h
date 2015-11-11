@@ -22,18 +22,21 @@ using namespace std;
 class ParallaxBackground {
 public:
 	ParallaxBackground(); // Default
-	ParallaxBackground(GLuint textureID);
+	ParallaxBackground(GLuint textureID0, GLuint textureID1, GLuint textureID2, GLuint textureID3);
 
 	void Update(float elapsed);
-	void FixedUpdate();
 	void Render(ShaderProgram *program);
 
 private:
-	GLuint textureID;
+	/*GLuint layer0;
+	GLuint layer1;
+	GLuint layer2;
+	GLuint layer3;
 
 	float width;
-	float height;
+	float height;*/
 
+	vector<GLuint> layers;
 	vector<float> vertexData;
-	vector<float> texCoordData;
+	vector<float> texCoordData[4];
 };

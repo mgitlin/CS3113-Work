@@ -23,17 +23,32 @@
 const Uint8 *keys = SDL_GetKeyboardState(NULL);
 SDL_Window* displayWindow;
 
-GLuint LoadTexture(const char *image_path) {
+GLuint LoadTextureClamp(const char *image_path) {
 	SDL_Surface *surface = IMG_Load(image_path);
 	GLuint textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA,
 		GL_UNSIGNED_BYTE, surface->pixels);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	SDL_FreeSurface(surface);
+	return textureID;
+}
+
+GLuint LoadTextureRepeat(const char *image_path) {
+	SDL_Surface *surface = IMG_Load(image_path);
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA,
+		GL_UNSIGNED_BYTE, surface->pixels);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	SDL_FreeSurface(surface);
 	return textureID;
 }
@@ -64,16 +79,20 @@ int main(int argc, char *argv[])
 	float timeLeftOver = 0.0f;
 
 	// Load backgrounds
-	GLint bg_forest = LoadTexture(RESOURCE_FOLDER"forest.png");
-	GLint bg_mountain = LoadTexture(RESOURCE_FOLDER"mountain.png");
+	GLint bg_forest_0 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\forest0.png");
+	GLint bg_forest_1 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\forest1.png");
+	GLint bg_forest_2 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\forest2.png");
+	GLint bg_forest_3 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\forest3.png");
+	GLint bg_mountain_0 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\mountain0.png");
+	GLint bg_mountain_1 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\mountain1.png");
+	GLint bg_mountain_2 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\mountain2.png");
+	GLint bg_mountain_3 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\mountain3.png");
 
 	// Load tileset
-	GLint tileset = LoadTexture(RESOURCE_FOLDER"tileset.png");
+	GLint tileset = LoadTextureClamp(RESOURCE_FOLDER"levels\\tileset.png");
 
-	Level level1("level1.txt", tileset, ParallaxBackground(bg_forest));
-//	Level level1("level1.txt", tileset, ParallaxBackground(bg_mountain));
-
-	float x = 0.0f;
+	Level level1("", tileset, ParallaxBackground(bg_forest_0, bg_forest_1, bg_forest_2, bg_forest_3));
+//	Level level1("", tileset, ParallaxBackground(bg_mountain_0, bg_mountain_1, bg_mountain_2, bg_mountain_3));
 
 	SDL_Event event;
 	bool done = false;
@@ -102,13 +121,15 @@ int main(int argc, char *argv[])
 		}
 		timeLeftOver = fixedElapsed;
 
-		if (keys[SDL_SCANCODE_RIGHT]) { 
+		/*if (keys[SDL_SCANCODE_RIGHT]) { 
 			x -= fixedElapsed * 0.75;
 		} // move right
+		if (keys[SDL_SCANCODE_LEFT]) {
+			x += fixedElapsed * 0.75;
+		} // move left
+		*/
 
-		viewMatrix.identity();
-		viewMatrix.Translate(x, 0.0f, 0.0f);
-
+		level1.FixedUpdate(fixedElapsed);
 		level1.Render(program);
 
 		SDL_GL_SwapWindow(displayWindow);

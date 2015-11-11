@@ -3,7 +3,7 @@
 Level::Level(){};
 Level::Level(string fileName, GLuint tileset, ParallaxBackground bg) 
 	: tileSet(tileset), bg(bg) {
-	ifstream infile("levels\\" + fileName);
+	ifstream infile(fileName);
 	string line;
 	if (!infile){
 		// Error check 
@@ -70,7 +70,13 @@ void Level::PrepareVertexData() {
 	}
 }
 
-void Update(float elapsed, const Entity &player){}
+void Level::Update(float elapsed){
+
+}
+
+void Level::FixedUpdate(float fixedElapsed) {
+	bg.Update(fixedElapsed);
+}
 
 void Level::Render(ShaderProgram* program) {
 	program->setModelMatrix(modelMatrix);

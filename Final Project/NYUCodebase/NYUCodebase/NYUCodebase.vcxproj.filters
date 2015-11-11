@@ -56,10 +56,28 @@
     <Image Include="levels\tileset.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="forest.png">
+    <Image Include="forest0.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="mountain.png">
+    <Image Include="forest1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="forest2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="forest3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="mountain0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="mountain1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="mountain2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="mountain3.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

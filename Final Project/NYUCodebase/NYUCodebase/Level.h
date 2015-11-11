@@ -39,8 +39,8 @@ public:
 
 	bool ReadLayerData(ifstream &stream);
 	void PrepareVertexData();
-	void Update(float elapsed, const Entity &player);
-	void FixedUpdate(float fixedElapsed, const Entity &player);
+	void Update(float elapsed);
+	void FixedUpdate(float fixedElapsed);
 	void Render(ShaderProgram *program);
 
 private:

@@ -92,9 +92,15 @@
     <None Include="vertex_textured.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="forest.png" />
+    <Image Include="forest0.png" />
+    <Image Include="forest1.png" />
+    <Image Include="forest2.png" />
+    <Image Include="forest3.png" />
     <Image Include="levels\tileset.png" />
-    <Image Include="mountain.png" />
+    <Image Include="mountain0.png" />
+    <Image Include="mountain1.png" />
+    <Image Include="mountain2.png" />
+    <Image Include="mountain3.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
