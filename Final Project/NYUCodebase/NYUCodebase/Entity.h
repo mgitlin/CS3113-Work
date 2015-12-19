@@ -16,35 +16,51 @@
 #include "ShaderProgram.h"
 #include "Matrix.h"
 
-enum EntityType {ENTITY_PLAYER, ENTITY_ENEMY};
+#include <vector>
+using namespace std;
+
+enum EntityType {ENTITY_PLAYER, ENTITY_ITEM};
 
 class Entity {
 public:
-	Entity(); // Default
-//	Entity();
+	// Default Constructor
+	Entity();
+	// Player Constructor
+	Entity(EntityType type, GLint sprite, GLint font, SDL_Scancode leftKey, SDL_Scancode rightKey, float start_x);
+	// Item Constructor
+	Entity(EntityType type, GLint sprite, GLint font, int value, Mix_Chunk* hitSound);
+
 	~Entity();
 
 	void Update(float elapsed);
-	void FixedUpdate(float fixedElapsed);
+	void FixedUpdate(float fixedElapsed, Entity *other);
 	void Render(ShaderProgram *program);
-	bool collidesWith(Entity *other);
+
+	void DrawText(ShaderProgram* program, int fontTexture, std::string text, float size, float spacing);
+	void RenderText(ShaderProgram *program);
 
 private:
 
-	float x;
-	float y;
+	float x_pos;
+	float start_x;
+	float y_pos;
 	float width;
 	float height;
 	float velocity_x;
-	float velocity_y;
-	float acceleration_x;
-	float acceleration_y;
 
-	bool isStatic;
+	int score;
+	int value;
+
+	SDL_Scancode leftKey;
+	SDL_Scancode rightKey;
+	GLint sprite;
+	GLint font;
+
 	EntityType type;
 
-	bool collidedTop;
-	bool collidedRight;
-	bool collidedBottom;
-	bool collidedLeft;
+	Mix_Chunk* hitSound;
+
+	const Uint8 *keys;
+	Matrix modelMatrix;
+	Matrix textMatrix;
 };

@@ -14,11 +14,10 @@
 
 #include "ShaderProgram.h"
 #include "Matrix.h"
+#include "Entity.h"
 #include "Level.h"
 
-// 60 FPS (1.0f/60.0f)
-#define FIXED_TIMESTEP 0.03333333f
-#define MAX_TIMESTEPS 6
+#include <vector>
 
 const Uint8 *keys = SDL_GetKeyboardState(NULL);
 SDL_Window* displayWindow;
@@ -70,29 +69,63 @@ int main(int argc, char *argv[])
 
 	glViewport(0, 0, 640, 480);
 
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+
 	Matrix modelMatrix;
 	Matrix viewMatrix;
 	Matrix projectionMatrix;
 	projectionMatrix.setOrthoProjection(-10.0f, 10.0f, -7.5f, 7.5f, -1.0f, 1.0f);
+	
+	std::vector<Entity> entities;
 
-	float lastFrameTicks = 0.0f;
-	float timeLeftOver = 0.0f;
+	// Load player sprites
+	GLint paddleBlue = LoadTextureClamp(RESOURCE_FOLDER"assets\\paddleBlu.png");
+	GLint paddleRed = LoadTextureClamp(RESOURCE_FOLDER"assets\\paddleRed.png");
+	// Load item sprites
+	GLint coinCopperSprite = LoadTextureClamp(RESOURCE_FOLDER"assets\\coinCopper.png");
+	GLint coinSilverSprite = LoadTextureClamp(RESOURCE_FOLDER"assets\\coinSilver.png");
+	GLint coinGoldSprite = LoadTextureClamp(RESOURCE_FOLDER"assets\\coinGold.png");
+	GLint coinPlatinumSprite = LoadTextureClamp(RESOURCE_FOLDER"assets\\coinPlatinum.png");
+	GLint starCopperSprite = LoadTextureClamp(RESOURCE_FOLDER"assets\\starCopper.png");
+	GLint starSilverSprite = LoadTextureClamp(RESOURCE_FOLDER"assets\\starSilver.png");
+	GLint starGoldSprite = LoadTextureClamp(RESOURCE_FOLDER"assets\\starGold.png");
+	GLint starPlatinumSprite = LoadTextureClamp(RESOURCE_FOLDER"assets\\starPlatinum.png");
+	// Load font
+	GLuint fontSheet = LoadTextureClamp(RESOURCE_FOLDER"assets\\font1.png");
+	// Load level bg
+	GLint levelBG = LoadTextureRepeat(RESOURCE_FOLDER"assets\\bg_castle.png");
 
-	// Load backgrounds
-	GLint bg_forest_0 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\forest0.png");
-	GLint bg_forest_1 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\forest1.png");
-	GLint bg_forest_2 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\forest2.png");
-	GLint bg_forest_3 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\forest3.png");
-	GLint bg_mountain_0 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\mountain0.png");
-	GLint bg_mountain_1 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\mountain1.png");
-	GLint bg_mountain_2 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\mountain2.png");
-	GLint bg_mountain_3 = LoadTextureRepeat(RESOURCE_FOLDER"levels\\backgrounds\\mountain3.png");
+	Mix_Chunk* itemHit;
+	itemHit = Mix_LoadWAV(RESOURCE_FOLDER"hit.wav");
 
-	// Load tileset
-	GLint tileset = LoadTextureClamp(RESOURCE_FOLDER"levels\\tileset.png");
+	// Initialize players
+	Entity playerBlue(ENTITY_PLAYER, paddleBlue, fontSheet, SDL_SCANCODE_A, SDL_SCANCODE_D, -5.0f);
+	Entity playerRed(ENTITY_PLAYER, paddleRed, fontSheet, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, 5.0f);
 
-	Level level1("", tileset, ParallaxBackground(bg_forest_0, bg_forest_1, bg_forest_2, bg_forest_3));
-//	Level level1("", tileset, ParallaxBackground(bg_mountain_0, bg_mountain_1, bg_mountain_2, bg_mountain_3));
+	Entity coinCopper(ENTITY_ITEM, coinCopperSprite, fontSheet, 10, itemHit);
+	Entity coinSilver(ENTITY_ITEM, coinSilverSprite, fontSheet, 25, itemHit);
+	Entity coinGold(ENTITY_ITEM, coinGoldSprite, fontSheet, 50, itemHit);
+	Entity coinPlatinum(ENTITY_ITEM, coinPlatinumSprite, fontSheet, 100, itemHit);
+	Entity starCopper(ENTITY_ITEM, starCopperSprite, fontSheet, 100, itemHit);
+	Entity starSilver(ENTITY_ITEM, starSilverSprite, fontSheet, 250, itemHit);
+	Entity starGold(ENTITY_ITEM, starGoldSprite, fontSheet, 500, itemHit);
+	Entity starPlatinum(ENTITY_ITEM, starPlatinumSprite, fontSheet, 1000, itemHit);
+
+	entities.push_back(playerBlue);
+	entities.push_back(playerRed);
+	entities.push_back(coinCopper);
+	entities.push_back(coinSilver);
+	entities.push_back(coinGold);
+	entities.push_back(coinPlatinum);
+	entities.push_back(starCopper);
+	entities.push_back(starSilver);
+	entities.push_back(starGold);
+	entities.push_back(starPlatinum);
+	
+	Mix_Music *music;
+	music = Mix_LoadMUS("gba1complete.mp3");
+
+	Level level1(LEVEL_CLOCKED, "Free Play", fontSheet, levelBG, music, entities);
 
 	SDL_Event event;
 	bool done = false;
@@ -109,28 +142,10 @@ int main(int argc, char *argv[])
 		program->setProjectionMatrix(projectionMatrix);
 		glUseProgram(program->programID);
 
-		float ticks = (float)SDL_GetTicks() / 1000.0f;
-		float elapsed = ticks - lastFrameTicks;
-		lastFrameTicks = ticks;
-		float fixedElapsed = elapsed + timeLeftOver;
-		if (fixedElapsed > FIXED_TIMESTEP * MAX_TIMESTEPS) {
-			fixedElapsed = FIXED_TIMESTEP * MAX_TIMESTEPS;
-		}
-		while (fixedElapsed >= FIXED_TIMESTEP) {
-			fixedElapsed -= FIXED_TIMESTEP;
-		}
-		timeLeftOver = fixedElapsed;
-
-		/*if (keys[SDL_SCANCODE_RIGHT]) { 
-			x -= fixedElapsed * 0.75;
-		} // move right
-		if (keys[SDL_SCANCODE_LEFT]) {
-			x += fixedElapsed * 0.75;
-		} // move left
-		*/
-
-		level1.FixedUpdate(fixedElapsed);
+		level1.Update();
+		level1.FixedUpdate();
 		level1.Render(program);
+		level1.RenderText(program);
 
 		SDL_GL_SwapWindow(displayWindow);
 	}

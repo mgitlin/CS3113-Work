@@ -1,97 +1,119 @@
 #include "Level.h"
 
-Level::Level(){};
-Level::Level(string fileName, GLuint tileset, ParallaxBackground bg) 
-	: tileSet(tileset), bg(bg) {
-	ifstream infile(fileName);
-	string line;
-	if (!infile){
-		// Error check 
-	}
-	while (getline(infile, line)) {
-		if (line == "[header]") { // Nothing right now, level data is hard coded
-		}
-		else if (line == "[layer]") { ReadLayerData(infile); }
-	}
-	PrepareVertexData();
+Level::Level(){}
+
+Level::Level(LevelType type, string name, GLint font, GLint bg, Mix_Music *bgm, vector<Entity> entitiesVec)
+	: keys(SDL_GetKeyboardState(NULL)), type(type), name(name), font(font), bg(bg), bgm(bgm), complete(false), clock(60.0f)
+{
+	entities = entitiesVec;
+	textMatrix.identity();
+	textMatrix.Translate(-9.0f, 7.0f, 0.0f);
+	textMatrix2.identity();
+	textMatrix2.Translate(-9.0f, 6.0f, 0.0f);
 }
 
-bool Level::ReadLayerData(ifstream &stream) {
-	string line;
-	while (getline(stream, line)) {
-		if (line == "") { break; }
-		istringstream sStream(line);
-		string key, value;
-		getline(sStream, key, '=');
-		getline(sStream, value);
-		if (key == "data") {
-			for (int y = 0; y < LEVEL_HEIGHT; y++) {
-				getline(stream, line);
-				istringstream lineStream(line);
-				string tile;
-				for (int x = 0; x < LEVEL_WIDTH; x++) {
-					getline(lineStream, tile, ',');
-					unsigned char val = (unsigned char)atoi(tile.c_str());
-					levelData[y][x] = val;
-				}
-			}
-		}
+Level::~Level(){}
+
+void Level::Update(){
+	float ticks = (float)SDL_GetTicks() / 1000.0f;
+	elapsed = ticks - lastFrameTicks;
+	lastFrameTicks = ticks;
+	fixedElapsed = elapsed + timeLeftOver;
+	if (fixedElapsed > FIXED_TIMESTEP * MAX_TIMESTEPS) {
+		fixedElapsed = FIXED_TIMESTEP * MAX_TIMESTEPS;
 	}
-	return true;
-}
-
-void Level::PrepareVertexData() {
-	for (int y = 0; y < LEVEL_HEIGHT; y++) {
-		for (int x = 0; x < LEVEL_WIDTH; x++) {
-			if (levelData[y][x] != 0) {
-				float u = (float)(((int)levelData[y][x] - 1) % SPRITE_COUNT_X) / (float)SPRITE_COUNT_X;
-				float v = (float)(((int)levelData[y][x] - 1) / SPRITE_COUNT_X) / (float)SPRITE_COUNT_Y;
-				float spriteWidth = 1.0f / (float)SPRITE_COUNT_X;
-				float spriteHeight = 1.0f / (float)SPRITE_COUNT_Y;
-				vertexData.insert(vertexData.end(), {
-					TILE_SIZE * x, -TILE_SIZE * y,
-					TILE_SIZE * x, (-TILE_SIZE * y) - TILE_SIZE,
-					(TILE_SIZE * x) + TILE_SIZE, (-TILE_SIZE * y) - TILE_SIZE,
-					TILE_SIZE * x, -TILE_SIZE * y,
-					(TILE_SIZE * x) + TILE_SIZE, (-TILE_SIZE * y) - TILE_SIZE,
-					(TILE_SIZE * x) + TILE_SIZE, -TILE_SIZE * y
-				});
-				texCoordData.insert(texCoordData.end(), {
-					u, v,
-					u, v + (spriteHeight),
-					u + spriteWidth, v + (spriteHeight),
-					u, v,
-					u + spriteWidth, v + (spriteHeight),
-					u + spriteWidth, v
-				});
-
-			}
+	while (fixedElapsed >= FIXED_TIMESTEP) {
+		fixedElapsed -= FIXED_TIMESTEP;
+	}
+	timeLeftOver = fixedElapsed;
+	if (!complete){
+		for (int i = 0; i < entities.size(); i++){
+			entities[i].Update(elapsed);
 		}
 	}
 }
 
-void Level::Update(float elapsed){
-
+void Level::FixedUpdate(){
+	if (type == LEVEL_CLOCKED){
+		if (clock <= 0.0f){
+			clock == 0.0f;
+			complete = true;
+		}
+		else
+			clock -= (fixedElapsed / 20);
+	}
+	if (!complete) {
+		for (int i = 2; i < entities.size(); i++){ // First 2 are always players
+			entities[i].FixedUpdate(fixedElapsed, &entities[0]);
+			entities[i].FixedUpdate(fixedElapsed, &entities[1]);
+		}
+	}
 }
 
-void Level::FixedUpdate(float fixedElapsed) {
-	bg.Update(fixedElapsed);
+void Level::Render(ShaderProgram *program){
+	glBindTexture(GL_TEXTURE_2D, bg);
+	GLfloat texCoords[] = { 0.0f, 1.0f,	1.0f, 0.0f,	0.0f, 0.0f,	1.0f, 0.0f,	0.0f, 1.0f,	1.0f, 1.0f };
+	float vertices[] = { -10.0f, -7.5f, 10.0f, 7.5f, -10.0f, 7.5f, 10.0f, 7.5f, -10.0f, -7.5f, 10.0f, -7.5f };
+	glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
+	glEnableVertexAttribArray(program->texCoordAttribute);
+	glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+	glEnableVertexAttribArray(program->positionAttribute);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDisableVertexAttribArray(program->positionAttribute);
+	glDisableVertexAttribArray(program->texCoordAttribute);
+
+	for (int i = 0; i < entities.size(); i++){
+		entities[i].Render(program);
+	}
 }
 
-void Level::Render(ShaderProgram* program) {
-	program->setModelMatrix(modelMatrix);
+void Level::RenderText(ShaderProgram *program){
+	for (int i = 0; i < entities.size(); i++){
+		entities[i].RenderText(program);
+	}
+	program->setModelMatrix(textMatrix);
+	if (type == LEVEL_FREEPLAY)
+		DrawText(program, font, "Free Play", 1.0f, 0.005f);
+	else if (type == LEVEL_CLOCKED) {
+		DrawText(program, font, "Against The Clock", 1.0f, 0.005f);
+		program->setModelMatrix(textMatrix2);
+		DrawText(program, font, "Time Left: " + to_string(static_cast<int>(clock)), 1.0f, 0.005f);
+	}
+	else if (type == LEVEL_SCORED)
+		DrawText(program, font, "Top Score", 1.0f, 0.005f);
+}
 
-	bg.Render(program);
-
+void Level::DrawText(ShaderProgram* program, int fontTexture, std::string text, float size, float spacing) {
+	float texture_size = 1.0 / 16.0f;
+	std::vector<float> vertexData;
+	std::vector<float> texCoordData;
+	for (int i = 0; i < text.size(); i++) {
+		float texture_x = (float)(((int)text[i]) % 16) / 16.0f;
+		float texture_y = (float)(((int)text[i]) / 16) / 16.0f;
+		vertexData.insert(vertexData.end(), {
+			((size + spacing) * i) + (-0.5f * size), 0.5f * size,
+			((size + spacing) * i) + (-0.5f * size), -0.5f * size,
+			((size + spacing) * i) + (0.5f * size), 0.5f * size,
+			((size + spacing) * i) + (0.5f * size), -0.5f * size,
+			((size + spacing) * i) + (0.5f * size), 0.5f * size,
+			((size + spacing) * i) + (-0.5f * size), -0.5f * size,
+		});
+		texCoordData.insert(texCoordData.end(), {
+			texture_x, texture_y,
+			texture_x, texture_y + texture_size,
+			texture_x + texture_size, texture_y,
+			texture_x + texture_size, texture_y + texture_size,
+			texture_x + texture_size, texture_y,
+			texture_x, texture_y + texture_size,
+		});
+	}
+	glUseProgram(program->programID);
 	glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertexData.data());
 	glEnableVertexAttribArray(program->positionAttribute);
-
 	glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoordData.data());
 	glEnableVertexAttribArray(program->texCoordAttribute);
-
-	glBindTexture(GL_TEXTURE_2D, tileSet);
-	glDrawArrays(GL_TRIANGLES, 0, vertexData.size() / 2);
-
+	glBindTexture(GL_TEXTURE_2D, fontTexture);
+	glDrawArrays(GL_TRIANGLES, 0, text.size() * 6);
 	glDisableVertexAttribArray(program->positionAttribute);
 	glDisableVertexAttribArray(program->texCoordAttribute);
 }

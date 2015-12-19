@@ -74,17 +74,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
-    <ClCompile Include="ParallaxBackground.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Matrix.h" />
-    <ClInclude Include="ParallaxBackground.h" />
     <ClInclude Include="ShaderProgram.h" />
   </ItemGroup>
   <ItemGroup>
@@ -92,15 +91,19 @@
     <None Include="vertex_textured.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="forest0.png" />
-    <Image Include="forest1.png" />
-    <Image Include="forest2.png" />
-    <Image Include="forest3.png" />
-    <Image Include="levels\tileset.png" />
-    <Image Include="mountain0.png" />
-    <Image Include="mountain1.png" />
-    <Image Include="mountain2.png" />
-    <Image Include="mountain3.png" />
+    <Image Include="assets\coinCopper.png" />
+    <Image Include="assets\coinGold.png" />
+    <Image Include="assets\coinPlatinum.png" />
+    <Image Include="assets\coinSilver.png" />
+    <Image Include="assets\starCopper.png" />
+    <Image Include="assets\starGold.png" />
+    <Image Include="assets\starPlatinum.png" />
+    <Image Include="assets\starSilver.png" />
+    <Image Include="paddleBlu.png" />
+    <Image Include="paddleRed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="assets\hit.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

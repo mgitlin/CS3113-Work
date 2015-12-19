@@ -15,43 +15,51 @@
 
 #include "ShaderProgram.h"
 #include "Matrix.h"
-#include "ParallaxBackground.h"
 #include "Entity.h"
 
-#include <fstream>
-#include <string>
-#include <iostream>
-#include <sstream>
 #include <vector>
 using namespace std;
 
-#define LEVEL_WIDTH 40
-#define LEVEL_HEIGHT 15
-#define TILE_SIZE 1.0f
-#define SPRITE_COUNT_X 4
-#define SPRITE_COUNT_Y 7
+// 10 FPS (1.0f/10.0f)
+#define FIXED_TIMESTEP 0.1f
+#define MAX_TIMESTEPS 1
+
+enum LevelType{LEVEL_FREEPLAY, LEVEL_CLOCKED, LEVEL_SCORED};
 
 class Level {
 public:
-	Level(); // Default
-	Level(string fileName, GLuint tileset, ParallaxBackground bg);
-//	~Level();
+	//Default
+	Level();
 
-	bool ReadLayerData(ifstream &stream);
-	void PrepareVertexData();
-	void Update(float elapsed);
-	void FixedUpdate(float fixedElapsed);
+	Level(LevelType type, string name, GLint font, GLint bg, Mix_Music *bgm, vector<Entity> entitiesVec);
+
+	~Level();
+
+	void Update();
+	void FixedUpdate();
 	void Render(ShaderProgram *program);
+	void RenderText(ShaderProgram *program);
+	void DrawText(ShaderProgram* program, int fontTexture, std::string text, float size, float spacing);
 
 private:
+
+	GLint bg;
 	Mix_Music *bgm;
-	ParallaxBackground bg;
-	GLuint tileSet;
+	
+	LevelType type;
+	string name;
+	GLint font;
+	float clock;
+	vector<Entity> entities;
+	bool complete;
 
-	vector<float> vertexData;
-	vector<float> texCoordData;
+	float lastFrameTicks;
+	float timeLeftOver;
+	float elapsed;
+	float fixedElapsed;
 
+	const Uint8 *keys;
 	Matrix modelMatrix;
-	unsigned char levelData[LEVEL_HEIGHT][LEVEL_WIDTH];
-
+	Matrix textMatrix;
+	Matrix textMatrix2;
 };
