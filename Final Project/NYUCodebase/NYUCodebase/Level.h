@@ -31,7 +31,7 @@ public:
 	//Default
 	Level();
 
-	Level(LevelType type, string name, GLint font, GLint bg, Mix_Music *bgm, vector<Entity> entitiesVec);
+	Level(LevelType type, GLint font, GLint bg, Mix_Music *bgm, vector<Entity> entitiesVec);
 
 	~Level();
 
@@ -41,17 +41,22 @@ public:
 	void RenderText(ShaderProgram *program);
 	void DrawText(ShaderProgram* program, int fontTexture, std::string text, float size, float spacing);
 
+	void reset();
+	int getWinner();
+	bool isComplete();
+	Mix_Music* getBgm();
+
 private:
 
 	GLint bg;
 	Mix_Music *bgm;
 	
 	LevelType type;
-	string name;
 	GLint font;
 	float clock;
 	vector<Entity> entities;
 	bool complete;
+	int winner;
 
 	float lastFrameTicks;
 	float timeLeftOver;

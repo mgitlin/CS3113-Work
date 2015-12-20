@@ -2,8 +2,8 @@
 
 Level::Level(){}
 
-Level::Level(LevelType type, string name, GLint font, GLint bg, Mix_Music *bgm, vector<Entity> entitiesVec)
-	: keys(SDL_GetKeyboardState(NULL)), type(type), name(name), font(font), bg(bg), bgm(bgm), complete(false), clock(60.0f)
+Level::Level(LevelType type, GLint font, GLint bg, Mix_Music *bgm, vector<Entity> entitiesVec)
+	: keys(SDL_GetKeyboardState(NULL)), type(type), font(font), bg(bg), bgm(bgm), complete(false), clock(60.0f)
 {
 	entities = entitiesVec;
 	textMatrix.identity();
@@ -26,6 +26,8 @@ void Level::Update(){
 		fixedElapsed -= FIXED_TIMESTEP;
 	}
 	timeLeftOver = fixedElapsed;
+	if (type == LEVEL_FREEPLAY && keys[SDL_SCANCODE_SPACE])
+		complete = true;
 	if (!complete){
 		for (int i = 0; i < entities.size(); i++){
 			entities[i].Update(elapsed);
@@ -36,11 +38,22 @@ void Level::Update(){
 void Level::FixedUpdate(){
 	if (type == LEVEL_CLOCKED){
 		if (clock <= 0.0f){
-			clock == 0.0f;
+			if (entities[0].getScore() > entities[1].getScore())
+				winner = 0;
+			else 
+				winner = 1;
 			complete = true;
 		}
 		else
 			clock -= (fixedElapsed / 20);
+	}
+	if (type == LEVEL_SCORED){
+		if (entities[0].getScore() >= 25000 || entities[1].getScore() >= 25000)
+			if (entities[0].getScore() >= 25000)
+				winner = 0;
+			else if (entities[1].getScore() >= 25000)
+				winner = 1;
+			complete = true;
 	}
 	if (!complete) {
 		for (int i = 2; i < entities.size(); i++){ // First 2 are always players
@@ -80,7 +93,7 @@ void Level::RenderText(ShaderProgram *program){
 		DrawText(program, font, "Time Left: " + to_string(static_cast<int>(clock)), 1.0f, 0.005f);
 	}
 	else if (type == LEVEL_SCORED)
-		DrawText(program, font, "Top Score", 1.0f, 0.005f);
+		DrawText(program, font, "First To 25,000", 1.0f, 0.005f);
 }
 
 void Level::DrawText(ShaderProgram* program, int fontTexture, std::string text, float size, float spacing) {
@@ -116,4 +129,24 @@ void Level::DrawText(ShaderProgram* program, int fontTexture, std::string text, 
 	glDrawArrays(GL_TRIANGLES, 0, text.size() * 6);
 	glDisableVertexAttribArray(program->positionAttribute);
 	glDisableVertexAttribArray(program->texCoordAttribute);
+}
+
+void Level::reset(){
+	for (int i = 0; i < entities.size(); i++){ 
+		entities[i].reset();
+	}
+	complete = false;
+	clock = 60.0f;
+}
+
+bool Level::isComplete(){
+	return complete;
+}
+
+Mix_Music* Level::getBgm() {
+	return bgm;
+}
+
+int Level::getWinner() {
+	return winner;
 }

@@ -91,6 +91,9 @@
     <None Include="vertex_textured.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\bg_level.png" />
+    <Image Include="assets\bg_main.png" />
+    <Image Include="assets\bg_over.png" />
     <Image Include="assets\coinCopper.png" />
     <Image Include="assets\coinGold.png" />
     <Image Include="assets\coinPlatinum.png" />
@@ -103,7 +106,10 @@
     <Image Include="paddleRed.png" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="assets\hit.wav" />
+    <Media Include="assets\FASE.mp3" />
+    <Media Include="assets\Im Free.mp3" />
+    <Media Include="assets\Lagrima.mp3" />
+    <Media Include="assets\The Old Song.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

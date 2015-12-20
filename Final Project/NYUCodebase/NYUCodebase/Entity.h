@@ -39,6 +39,9 @@ public:
 	void DrawText(ShaderProgram* program, int fontTexture, std::string text, float size, float spacing);
 	void RenderText(ShaderProgram *program);
 
+	void reset();
+	int getScore();
+
 private:
 
 	float x_pos;

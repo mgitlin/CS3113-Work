@@ -28,7 +28,7 @@ void Entity::Update(float elapsed) {
 			velocity_x = 0.0f;
 	}
 	else if (type == ENTITY_ITEM) {
-		y_pos -= elapsed * (rand() % 10 + 5);
+		y_pos -= elapsed * (rand() % 15 + 3);
 		if (y_pos < -8) {
 			x_pos = rand() % 19 + -9.5;
 			y_pos = rand() % 3 + 8;
@@ -45,7 +45,7 @@ void Entity::FixedUpdate(float fixedElapsed, Entity *other) {
 			this->x_pos - (this->width / 48.0f) < other->x_pos + ((other->width - 50.0f) / 48.0f)
 			) {
 			other->score += this->value;
-			Mix_PlayChannel(-1, hitSound, 0);
+			//Mix_PlayChannel(-1, hitSound, 0);
 			x_pos = rand() % 19 + -9.5;
 			y_pos = rand() % 3 + 8;
 		}		
@@ -127,4 +127,19 @@ void Entity::DrawText(ShaderProgram* program, int fontTexture, std::string text,
 	glDrawArrays(GL_TRIANGLES, 0, text.size() * 6);
 	glDisableVertexAttribArray(program->positionAttribute);
 	glDisableVertexAttribArray(program->texCoordAttribute);
+}
+
+void Entity::reset(){
+	if (type == ENTITY_PLAYER) {
+		x_pos = start_x;
+		score = 0;
+	}
+	else if (type == ENTITY_ITEM) {
+		x_pos = rand() % 19 + -9.5;
+		y_pos = rand() % 3 + 8;
+	}
+}
+
+int Entity::getScore(){
+	return score;
 }
