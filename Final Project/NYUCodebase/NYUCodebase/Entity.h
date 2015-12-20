@@ -15,6 +15,7 @@
 
 #include "ShaderProgram.h"
 #include "Matrix.h"
+#include "ParticleEmitter.h"
 
 #include <vector>
 using namespace std;
@@ -60,7 +61,7 @@ private:
 	GLint font;
 
 	EntityType type;
-
+	ParticleEmitter pe;
 	Mix_Chunk* hitSound;
 
 	const Uint8 *keys;

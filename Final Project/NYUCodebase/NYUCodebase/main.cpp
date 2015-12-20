@@ -151,8 +151,21 @@ int main(int argc, char *argv[])
 	GLint levelBG = LoadTextureRepeat(RESOURCE_FOLDER"assets\\bg_level.png");
 	GLint overBG = LoadTextureRepeat(RESOURCE_FOLDER"assets\\bg_over.png");
 
+	// Load music
+	Mix_Music *music1;
+	music1 = Mix_LoadMUS(RESOURCE_FOLDER"assets\\Im Free.mp3");
+	Mix_Music *music2;
+	music2 = Mix_LoadMUS(RESOURCE_FOLDER"assets\\Lagrima.mp3");
+	Mix_Music *music3;
+	music3 = Mix_LoadMUS(RESOURCE_FOLDER"assets\\The Old Song.mp3");
+	Mix_Music *music4;
+	music4 = Mix_LoadMUS(RESOURCE_FOLDER"assets\\FASE.mp3");
+	// Load sounds
 	Mix_Chunk* itemHit;
 	itemHit = Mix_LoadWAV(RESOURCE_FOLDER"hit.wav");
+	Mix_Chunk* buttonPress;
+	buttonPress = Mix_LoadWAV(RESOURCE_FOLDER"Menu Selection Click.wav");
+
 
 	// Initialize players
 	Entity playerBlue(ENTITY_PLAYER, paddleBlue, fontSheet, SDL_SCANCODE_A, SDL_SCANCODE_D, -5.0f);
@@ -177,15 +190,6 @@ int main(int argc, char *argv[])
 	entities.push_back(starSilver);
 	entities.push_back(starGold);
 	entities.push_back(starPlatinum);
-	
-	Mix_Music *music1;
-	music1 = Mix_LoadMUS(RESOURCE_FOLDER"assets\\Im Free.mp3");
-	Mix_Music *music2;
-	music2 = Mix_LoadMUS(RESOURCE_FOLDER"assets\\Lagrima.mp3");
-	Mix_Music *music3;
-	music3 = Mix_LoadMUS(RESOURCE_FOLDER"assets\\The Old Song.mp3");
-	Mix_Music *music4;
-	music4 = Mix_LoadMUS(RESOURCE_FOLDER"assets\\FASE.mp3");
 
 	Level level1(LEVEL_FREEPLAY, fontSheet, levelBG, music2, entities);
 	Level level2(LEVEL_CLOCKED, fontSheet, levelBG, music4, entities);
@@ -208,22 +212,23 @@ int main(int argc, char *argv[])
 		program->setProjectionMatrix(projectionMatrix);
 		glUseProgram(program->programID);
 
-
-
 		switch (state)
 		{
 		case MAIN_MENU:
 			RenderBG(program, mainBG);
 			if (keys[SDL_SCANCODE_1]) { // Press 1 to get into game level
 				state = GAME_LEVEL_1;
+				Mix_PlayChannel(-1, buttonPress, 0);
 				Mix_PlayMusic(level1.getBgm(), -1);
 			}
 			if (keys[SDL_SCANCODE_2]) { // Press 2 to get into game level
 				state = GAME_LEVEL_2;
+				Mix_PlayChannel(-1, buttonPress, 0);
 				Mix_PlayMusic(level2.getBgm(), -1);
 			}
 			if (keys[SDL_SCANCODE_3]) { // Press 3 to get into game level
 				state = GAME_LEVEL_3;
+				Mix_PlayChannel(-1, buttonPress, 0);
 				Mix_PlayMusic(level3.getBgm(), -1);
 			}
 			if (keys[SDL_SCANCODE_ESCAPE]){
@@ -282,7 +287,11 @@ int main(int argc, char *argv[])
 			else if (lastWinner == 1)
 				DrawText(program, fontSheet, "Red Player wins!", 1.0f, 0.005f);
 			if (keys[SDL_SCANCODE_RETURN]) {
+				level1.reset();
+				level2.reset();
+				level3.reset();
 				state = MAIN_MENU;
+				Mix_PlayChannel(-1, buttonPress, 0);
 			}
 			else if (keys[SDL_SCANCODE_ESCAPE]) {
 				done = true;

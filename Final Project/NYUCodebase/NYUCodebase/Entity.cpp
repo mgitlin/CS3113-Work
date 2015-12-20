@@ -13,7 +13,10 @@ Entity::Entity(EntityType type, GLint sprite, GLint font, SDL_Scancode leftKey, 
 // Item Constructor
 Entity::Entity(EntityType type, GLint sprite, GLint font, int value, Mix_Chunk* hitSound)
 	: keys(SDL_GetKeyboardState(NULL)), sprite(sprite), font(font), value(value), hitSound(hitSound),
-	x_pos(rand() % 19 + -9.5 ), y_pos(rand() % 8 + 8), width(40.0f), height(40.0f), type(type) {}
+	x_pos(rand() % 19 + -9.5 ), y_pos(rand() % 8 + 8), width(40.0f), height(40.0f), type(type) 
+{
+	pe = ParticleEmitter(10);
+}
 
 Entity::~Entity(){}
 
@@ -33,6 +36,7 @@ void Entity::Update(float elapsed) {
 			x_pos = rand() % 19 + -9.5;
 			y_pos = rand() % 3 + 8;
 		}
+		pe.Update(elapsed);
 	}
 	modelMatrix.identity();
 	modelMatrix.Translate(x_pos, y_pos, 0.0f);
@@ -45,6 +49,7 @@ void Entity::FixedUpdate(float fixedElapsed, Entity *other) {
 			this->x_pos - (this->width / 48.0f) < other->x_pos + ((other->width - 50.0f) / 48.0f)
 			) {
 			other->score += this->value;
+			this->pe.Trigger(this->x_pos, this->y_pos);
 			//Mix_PlayChannel(-1, hitSound, 0);
 			x_pos = rand() % 19 + -9.5;
 			y_pos = rand() % 3 + 8;
@@ -85,6 +90,8 @@ void Entity::Render(ShaderProgram *program){
 
 	glDisableVertexAttribArray(program->positionAttribute);
 	glDisableVertexAttribArray(program->texCoordAttribute);
+
+	pe.Render(program);
 
 }
 
