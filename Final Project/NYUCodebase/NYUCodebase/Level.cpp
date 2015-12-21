@@ -45,7 +45,7 @@ void Level::FixedUpdate(){
 			complete = true;
 		}
 		else
-			clock -= (fixedElapsed / 20);
+			clock -= (fixedElapsed / 10);
 	}
 	if (type == LEVEL_SCORED){
 		if (entities[0].getScore() >= 25000 || entities[1].getScore() >= 25000){

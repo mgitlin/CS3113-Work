@@ -51,6 +51,7 @@ private:
 	float width;
 	float height;
 	float velocity_x;
+	float rotation;
 
 	int score;
 	int value;

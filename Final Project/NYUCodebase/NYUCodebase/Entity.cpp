@@ -29,17 +29,23 @@ void Entity::Update(float elapsed) {
 			velocity_x = 1.0f;
 		else
 			velocity_x = 0.0f;
+
+		modelMatrix.identity();
+		modelMatrix.Translate(x_pos, y_pos, 0.0f);
 	}
 	else if (type == ENTITY_ITEM) {
 		y_pos -= elapsed * (rand() % 15 + 3);
+		rotation += elapsed * (180 / 3.14) / 15.0f;
 		if (y_pos < -8) {
 			x_pos = rand() % 19 + -9.5;
 			y_pos = rand() % 3 + 8;
 		}
 		pe.Update(elapsed);
+
+		modelMatrix.identity();
+		modelMatrix.Translate(x_pos, y_pos, 0.0f);
+		modelMatrix.Rotate(rotation);
 	}
-	modelMatrix.identity();
-	modelMatrix.Translate(x_pos, y_pos, 0.0f);
 }
 
 void Entity::FixedUpdate(float fixedElapsed, Entity *other) {
@@ -50,7 +56,7 @@ void Entity::FixedUpdate(float fixedElapsed, Entity *other) {
 			) {
 			other->score += this->value;
 			this->pe.Trigger(this->x_pos, this->y_pos);
-			//Mix_PlayChannel(-1, hitSound, 0);
+			Mix_PlayChannel(-1, hitSound, 0);
 			x_pos = rand() % 19 + -9.5;
 			y_pos = rand() % 3 + 8;
 		}		

@@ -171,14 +171,14 @@ int main(int argc, char *argv[])
 	Entity playerBlue(ENTITY_PLAYER, paddleBlue, fontSheet, SDL_SCANCODE_A, SDL_SCANCODE_D, -5.0f);
 	Entity playerRed(ENTITY_PLAYER, paddleRed, fontSheet, SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, 5.0f);
 
-	Entity coinCopper(ENTITY_ITEM, coinCopperSprite, fontSheet, 10, itemHit);
-	Entity coinSilver(ENTITY_ITEM, coinSilverSprite, fontSheet, 25, itemHit);
-	Entity coinGold(ENTITY_ITEM, coinGoldSprite, fontSheet, 50, itemHit);
-	Entity coinPlatinum(ENTITY_ITEM, coinPlatinumSprite, fontSheet, 100, itemHit);
-	Entity starCopper(ENTITY_ITEM, starCopperSprite, fontSheet, 100, itemHit);
-	Entity starSilver(ENTITY_ITEM, starSilverSprite, fontSheet, 250, itemHit);
-	Entity starGold(ENTITY_ITEM, starGoldSprite, fontSheet, 500, itemHit);
-	Entity starPlatinum(ENTITY_ITEM, starPlatinumSprite, fontSheet, 1000, itemHit);
+	Entity coinCopper(ENTITY_ITEM, coinCopperSprite, fontSheet, 10, buttonPress);
+	Entity coinSilver(ENTITY_ITEM, coinSilverSprite, fontSheet, 25, buttonPress);
+	Entity coinGold(ENTITY_ITEM, coinGoldSprite, fontSheet, 50, buttonPress);
+	Entity coinPlatinum(ENTITY_ITEM, coinPlatinumSprite, fontSheet, 100, buttonPress);
+	Entity starCopper(ENTITY_ITEM, starCopperSprite, fontSheet, 100, buttonPress);
+	Entity starSilver(ENTITY_ITEM, starSilverSprite, fontSheet, 250, buttonPress);
+	Entity starGold(ENTITY_ITEM, starGoldSprite, fontSheet, 500, buttonPress);
+	Entity starPlatinum(ENTITY_ITEM, starPlatinumSprite, fontSheet, 1000, buttonPress);
 
 	entities.push_back(playerBlue);
 	entities.push_back(playerRed);
@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
 	entities.push_back(starGold);
 	entities.push_back(starPlatinum);
 
-	Level level1(LEVEL_FREEPLAY, fontSheet, levelBG, music2, entities);
+	Level level1(LEVEL_FREEPLAY, fontSheet, levelBG, music3, entities);
 	Level level2(LEVEL_CLOCKED, fontSheet, levelBG, music4, entities);
 	Level level3(LEVEL_SCORED, fontSheet, levelBG, music1, entities);
 
