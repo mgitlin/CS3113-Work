@@ -56,10 +56,13 @@
     <None Include="fragment_textured.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="paddleBlu.png">
+    <Image Include="assets\bg_level.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="paddleRed.png">
+    <Image Include="assets\bg_main.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\bg_over.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="assets\coinCopper.png">
@@ -74,6 +77,15 @@
     <Image Include="assets\coinSilver.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="assets\font1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\paddleBlu.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\paddleRed.png">
+      <Filter>Resource Files</Filter>
+    </Image>
     <Image Include="assets\starCopper.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -86,27 +98,21 @@
     <Image Include="assets\starSilver.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="assets\bg_level.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="assets\bg_main.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="assets\bg_over.png">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="assets\FASE.mp3">
       <Filter>Resource Files</Filter>
     </Media>
+    <Media Include="assets\Im Free.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
     <Media Include="assets\Lagrima.mp3">
       <Filter>Resource Files</Filter>
     </Media>
-    <Media Include="assets\The Old Song.mp3">
+    <Media Include="assets\Menu Selection Click.wav">
       <Filter>Resource Files</Filter>
     </Media>
-    <Media Include="assets\Im Free.mp3">
+    <Media Include="assets\The Old Song.mp3">
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>

@@ -100,17 +100,19 @@
     <Image Include="assets\coinGold.png" />
     <Image Include="assets\coinPlatinum.png" />
     <Image Include="assets\coinSilver.png" />
+    <Image Include="assets\font1.png" />
+    <Image Include="assets\paddleBlu.png" />
+    <Image Include="assets\paddleRed.png" />
     <Image Include="assets\starCopper.png" />
     <Image Include="assets\starGold.png" />
     <Image Include="assets\starPlatinum.png" />
     <Image Include="assets\starSilver.png" />
-    <Image Include="paddleBlu.png" />
-    <Image Include="paddleRed.png" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="assets\FASE.mp3" />
     <Media Include="assets\Im Free.mp3" />
     <Media Include="assets\Lagrima.mp3" />
+    <Media Include="assets\Menu Selection Click.wav" />
     <Media Include="assets\The Old Song.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

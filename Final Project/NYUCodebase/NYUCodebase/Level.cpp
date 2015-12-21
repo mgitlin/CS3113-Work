@@ -48,12 +48,13 @@ void Level::FixedUpdate(){
 			clock -= (fixedElapsed / 20);
 	}
 	if (type == LEVEL_SCORED){
-		if (entities[0].getScore() >= 25000 || entities[1].getScore() >= 25000)
+		if (entities[0].getScore() >= 25000 || entities[1].getScore() >= 25000){
 			if (entities[0].getScore() >= 25000)
 				winner = 0;
 			else if (entities[1].getScore() >= 25000)
 				winner = 1;
 			complete = true;
+		}
 	}
 	if (!complete) {
 		for (int i = 2; i < entities.size(); i++){ // First 2 are always players

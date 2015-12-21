@@ -1,13 +1,9 @@
-﻿Build started 12/20/2015 5:42:47 PM.
+﻿Build started 12/21/2015 10:42:40 AM.
      1>Project "C:\Users\Matt\Dropbox\School\2015-2016\Fall 2015\CS-UY 3113\Final Project\NYUCodebase\NYUCodebase\NYUCodebase.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\SDL2\include /IC:\SDL2_image\include /IC:\glew\include /IC:\SDL2_mixer\include /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _WINDOWS /D _MBCS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ParticleEmitter.cpp
-         ParticleEmitter.cpp
-     1>c:\users\matt\dropbox\school\2015-2016\fall 2015\cs-uy 3113\final project\nyucodebase\nyucodebase\particleemitter.cpp(6): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt\dropbox\school\2015-2016\fall 2015\cs-uy 3113\final project\nyucodebase\nyucodebase\particleemitter.cpp(15): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt\dropbox\school\2015-2016\fall 2015\cs-uy 3113\final project\nyucodebase\nyucodebase\particleemitter.cpp(27): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt\dropbox\school\2015-2016\fall 2015\cs-uy 3113\final project\nyucodebase\nyucodebase\particleemitter.cpp(38): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt\dropbox\school\2015-2016\fall 2015\cs-uy 3113\final project\nyucodebase\nyucodebase\particleemitter.cpp(47): warning C4018: '<' : signed/unsigned mismatch
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\SDL2\include /IC:\SDL2_image\include /IC:\glew\include /IC:\SDL2_mixer\include /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _WINDOWS /D _MBCS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>c:\users\matt\dropbox\school\2015-2016\fall 2015\cs-uy 3113\final project\nyucodebase\nyucodebase\main.cpp(75): warning C4018: '<' : signed/unsigned mismatch
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Matt\Dropbox\School\2015-2016\Fall 2015\CS-UY 3113\Final Project\NYUCodebase\Debug\NYUCodebase.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\SDL2_mixer\lib\x86 /LIBPATH:C:\SDL2\lib\x86 /LIBPATH:C:\SDL2_image\lib\x86 /LIBPATH:C:\glew\lib\Release\Win32 SDL2.lib SDL2_mixer.lib glew32.lib SDL2main.lib SDL2_image.lib OpenGL32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Matt\Dropbox\School\2015-2016\Fall 2015\CS-UY 3113\Final Project\NYUCodebase\Debug\NYUCodebase.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Matt\Dropbox\School\2015-2016\Fall 2015\CS-UY 3113\Final Project\NYUCodebase\Debug\NYUCodebase.lib" /MACHINE:X86 Debug\Entity.obj
          Debug\Level.obj
@@ -20,4 +16,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.50
+Time Elapsed 00:00:01.59
